@@ -1,0 +1,38 @@
+version: 1
+updated_at: "2026-07-10T00:00:00Z"
+sources:
+  - id: eu-eeas-travel-advice
+    name: EU External Action Service
+    url: https://www.eeas.europa.eu/
+    category: government
+    official: true
+    coverage:
+      countries: ["HR", "US"]
+    lastReviewedAt: "2026-07-10T00:00:00Z"
+
+  - id: us-state-travel
+    name: U.S. Department of State Travel Advisories
+    url: https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories.html/
+    category: government
+    official: true
+    coverage:
+      countries: ["US", "HR"]
+    lastReviewedAt: "2026-07-10T00:00:00Z"
+
+  - id: wikivoyage
+    name: Wikivoyage
+    url: https://www.wikivoyage.org/
+    category: travel-guide
+    official: false
+    coverage:
+      countries: ["HR", "US"]
+    lastReviewedAt: "2026-07-10T00:00:00Z"
+
+  - id: openstreetmap
+    name: OpenStreetMap
+    url: https://www.openstreetmap.org/
+    category: maps
+    official: false
+    coverage:
+      countries: ["HR", "US"]
+    lastReviewedAt: "2026-07-10T00:00:00Z"

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://baiyungao.github.io/travel-portal-schemas/schemas/trust-source.schema.json",
+  "title": "TrustSourceDocument",
+  "description": "One entry in the curated trust registry (trust-registry/sources.yml): a reputable travel site or official government source, with country coverage and review freshness.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "url", "category", "coverage", "lastReviewedAt", "official"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "name": { "type": "string", "minLength": 1 },
+    "url": { "type": "string", "format": "uri" },
+    "category": {
+      "type": "string",
+      "enum": ["government", "maps", "travel-guide", "transport", "weather", "safety"]
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["countries"],
+      "properties": {
+        "countries": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z]{2}$"
+          }
+        }
+      }
+    },
+    "official": { "type": "boolean" },
+    "notes": { "type": "string" },
+    "lastReviewedAt": { "type": "string", "format": "date-time" }
+  }
+}

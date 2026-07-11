@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://baiyungao.github.io/travel-portal-schemas/schemas/itinerary.schema.json",
+  "title": "ItineraryDocument",
+  "description": "Structured day-by-day itinerary for a trip. Written by the planner pipeline (generate/replan/feedback jobs), rendered by the Trip Workspace. Every recommendation must carry source attribution; safety warnings are advisory only.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "itineraryId",
+    "tripId",
+    "userId",
+    "locale",
+    "jobType",
+    "generatedAt",
+    "startDate",
+    "endDate",
+    "days"
+  ],
+  "properties": {
+    "itineraryId": { "type": "string", "minLength": 1 },
+    "tripId": { "type": "string", "minLength": 1 },
+    "userId": { "type": "string", "minLength": 1 },
+    "locale": { "$ref": "#/$defs/locale" },
+    "jobType": { "$ref": "#/$defs/jobType" },
+    "revision": { "type": "integer", "minimum": 1 },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "startDate": { "type": "string", "format": "date" },
+    "endDate": { "type": "string", "format": "date" },
+    "summary": { "type": "string" },
+    "days": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["dayNumber", "date", "city", "blocks"],
+        "properties": {
+          "dayNumber": { "type": "integer", "minimum": 1 },
+          "date": { "type": "string", "format": "date" },
+          "city": { "type": "string", "minLength": 1 },
+          "blocks": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["blockType", "title", "recommendations"],
+              "properties": {
+                "blockType": { "$ref": "#/$defs/itineraryBlockType" },
+                "title": { "type": "string", "minLength": 1 },
+                "notes": { "type": "string" },
+                "recommendations": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": ["kind", "title", "sources"],
+                    "properties": {
+                      "kind": { "$ref": "#/$defs/recommendationKind" },
+                      "title": { "type": "string", "minLength": 1 },
+                      "description": { "type": "string" },
+                      "location": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": ["name"],
+                        "properties": {
+                          "name": { "type": "string", "minLength": 1 },
+                          "lat": { "type": "number" },
+                          "lng": { "type": "number" }
+                        }
+                      },
+                      "bookingDeadline": { "type": "string", "format": "date-time" },
+                      "sources": {
+                        "type": "array",
+                        "minItems": 1,
+                        "items": { "$ref": "#/$defs/sourceRef" }
+                      },
+                      "warnings": {
+                        "type": "array",
+                        "items": { "$ref": "#/$defs/warning" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "locale": { "type": "string", "enum": ["en", "zh"] },
+    "jobType": {
+      "type": "string",
+      "description": "Job type that produced this itinerary revision. The full job-type enum (including profile-extraction) belongs to the jobs table; profile-extraction jobs never emit an itinerary.",
+      "enum": ["generate", "replan", "feedback"]
+    },
+    "itineraryBlockType": {
+      "type": "string",
+      "enum": ["morning", "afternoon", "evening", "full-day", "lodging", "transit", "free-time"]
+    },
+    "recommendationKind": {
+      "type": "string",
+      "description": "Distinguishes lodging (affiliate placement slots, booking deadlines) and transfers from activities and dining in timeline rendering.",
+      "enum": ["activity", "dining", "lodging", "transport", "other"]
+    },
+    "warningSeverity": { "type": "string", "enum": ["info", "warning", "critical"] },
+    "sourceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["url", "publisher", "retrievedAt"],
+      "properties": {
+        "url": { "type": "string", "format": "uri" },
+        "publisher": { "type": "string", "minLength": 1 },
+        "retrievedAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "warning": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["severity", "message"],
+      "properties": {
+        "severity": { "$ref": "#/$defs/warningSeverity" },
+        "message": { "type": "string", "minLength": 1 },
+        "alternative": { "type": "string" }
+      }
+    }
+  }
+}

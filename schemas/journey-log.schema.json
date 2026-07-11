@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://baiyungao.github.io/travel-portal-schemas/schemas/journey-log.schema.json",
+  "title": "JourneyLogEntry",
+  "description": "One in-trip feedback event; stored append-only as a line in journey-log.jsonl. Quick-tap events (running-late, closed, loved-it, skip) may omit message text.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["entryId", "tripId", "userId", "occurredAt", "eventType", "payload"],
+  "properties": {
+    "entryId": { "type": "string", "minLength": 1 },
+    "tripId": { "type": "string", "minLength": 1 },
+    "userId": { "type": "string", "minLength": 1 },
+    "occurredAt": { "type": "string", "format": "date-time" },
+    "eventType": {
+      "type": "string",
+      "enum": ["running-late", "closed", "loved-it", "skip", "note", "replan-requested"]
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "message": { "type": "string", "minLength": 1 },
+        "dayNumber": { "type": "integer", "minimum": 1 },
+        "activityRef": { "type": "string" }
+      }
+    }
+  }
+}
